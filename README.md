@@ -72,6 +72,16 @@ terraform-assessment/
 └── README.md                  # This file
 ```
 
+## Local setup script
+
+If present, the `setup.sh` script provides a small local automation helper that:
+
+- Generates an SSH key if one is not found locally
+- Detects your public IP and inserts it into `terraform.tfvars`
+- Reminds you to run `terraform init`, `terraform plan`, and `terraform apply`
+
+This kind of scripting demonstrates useful automation skills — writing idempotent, repeatable setup steps is a good cloud engineering practice. For safety in public repos we recommend keeping a tracked template (for example `setup.example.sh`) and adding `setup.sh` to `.gitignore` so users run and customize the script locally rather than committing generated secrets or keys. See the "Sanitizing evidence and exported state" section for guidance on what to avoid committing.
+
 ## Deployment Instructions
 
 ### Step 1: Clone and Configure
