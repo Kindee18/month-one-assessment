@@ -1,0 +1,16 @@
+/.terraform
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
+*.tfvars.json
+# Local override files
+override.tf
+override.tf.json
+# Crash log
+crash.log
+
+# Ignore IDE and OS files
+.vscode/
+.idea/
+*.swp
+.DS_Store
