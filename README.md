@@ -34,25 +34,18 @@ Before deploying this infrastructure, ensure you have:
    wget https://releases.hashicorp.com/terraform/1.6.0/terraform_1.6.0_linux_amd64.zip
    unzip terraform_1.6.0_linux_amd64.zip
    sudo mv terraform /usr/local/bin/
+
+   # On windows
+   choco install terraform
    ```
 
 3. **SSH Key Pair** generated
 
    ```bash
    ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa
-
-   wget https://releases.hashicorp.com/terraform/1.6.0/terraform_1.6.0_linux_amd64.zip
-   unzip terraform_1.6.0_linux_amd64.zip
-   sudo mv terraform /usr/local/bin/
    ```
 
-4. **SSH Key Pair** generated
-
-   ```bash
-   ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa
-   ```
-
-5. **Your current IP address** for bastion host access
+4. **Your current IP address** for bastion host access
    ```bash
    curl ifconfig.me
    ```
