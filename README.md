@@ -58,6 +58,7 @@ terraform-assessment/
 ├── variables.tf               # Variable declarations
 ├── outputs.tf                 # Output definitions
 ├── terraform.tfvars.example   # Example variable values
+├── setup.sh                   # Local setup helper (run locally; contains prompts)
 ├── user_data/
 │   ├── web_server_setup.sh    # Web server configuration script
 │   └── db_server_setup.sh     # Database server configuration script
@@ -73,7 +74,15 @@ If present, the `setup.sh` script provides a small local automation helper that:
 - Detects your public IP and inserts it into `terraform.tfvars`
 - Reminds you to run `terraform init`, `terraform plan`, and `terraform apply`
 
-This kind of scripting demonstrates useful automation skills — writing idempotent, repeatable setup steps is a good cloud engineering practice. For safety in public repos we recommend keeping a tracked template (for example `setup.example.sh`) and adding `setup.sh` to `.gitignore` so users run and customize the script locally rather than committing generated secrets or keys. See the "Sanitizing evidence and exported state" section for guidance on what to avoid committing.
+This kind of scripting demonstrates useful automation skills. Writing repeatable setup steps is a good cloud engineering practice.
+
+**Important — copy before you edit:** Do not edit the tracked `setup.sh` directly in the repository. Instead, make a local copy and edit that file so you don't accidentally commit local changes, secrets, or keys. Example:
+
+```bash
+cp setup.sh setup.local.sh
+chmod +x setup.local.sh
+# edit setup.local.sh and run it locally
+```
 
 ## Deployment Instructions
 
