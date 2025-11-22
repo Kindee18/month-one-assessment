@@ -12,7 +12,8 @@ public_key_path = "~/.ssh/id_rsa.pub"
 
 # Security Configuration
 # Replace with your public IP in CIDR format (e.g. "203.0.113.1/32").
-my_ip = "YOUR_IP_ADDRESS/32"  # Replace with your actual IP address
+# The setup script will append `/32` if you supply a bare IP.
+my_ip = "YOUR_IP_ADDRESS"  # Replace with your actual IP address (CIDR will be added by setup.sh)
 
 # Server Access
 # Provide a secure password for the `server_password` variable (do NOT commit secrets).
