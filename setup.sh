@@ -72,10 +72,9 @@ if [ -f terraform.tfvars ]; then
     if [[ ! "$overwrite" =~ ^([yY])$ ]]; then
         echo "Keeping existing terraform.tfvars. Edit it manually if necessary."
     else
-        # timestamped backup
-        ts=$(date -u +%Y%m%dT%H%M%SZ)
-        cp terraform.tfvars "terraform.tfvars.bak.${ts}"
-        echo "Backup saved to terraform.tfvars.bak.${ts}"
+        # keep a single, deterministic backup file so it doesn't create many files
+        cp terraform.tfvars terraform.tfvars.bak
+        echo "Backup saved to terraform.tfvars.bak (overwritten)"
         if [ -f terraform.tfvars.example ]; then
             cp terraform.tfvars.example terraform.tfvars
             # replace either YOUR_IP_ADDRESS or YOUR_IP_ADDRESS/32 with the computed CIDR
