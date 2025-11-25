@@ -73,14 +73,16 @@ if [ -f terraform.tfvars ]; then
         echo "Keeping existing terraform.tfvars. Edit it manually if necessary."
     else
         # keep a single, deterministic backup file so it doesn't create many files
-        cp terraform.tfvars terraform.tfvars.bak
-        echo "Backup saved to terraform.tfvars.bak (overwritten)"
+        cp terraform.tfvars terraform.tfvars.bak || true
+        echo "Backup saved to terraform.tfvars.bak"
         if [ -f terraform.tfvars.example ]; then
-            cp terraform.tfvars.example terraform.tfvars
-            # replace either YOUR_IP_ADDRESS or YOUR_IP_ADDRESS/32 with the computed CIDR
-            sed -i "s|YOUR_IP_ADDRESS\(/32\)\?|${CIDR}|g" terraform.tfvars
-            chmod 600 terraform.tfvars || true
-            echo "terraform.tfvars overwritten with IP: ${CIDR}"
+            # copy example only if the file lacks a my_ip line; otherwise keep current file and replace just my_ip
+            if grep -Eq '^[[:space:]]*my_ip[[:space:]]*=' terraform.tfvars; then
+                # replace only the my_ip value (preserve other lines like aws_region)
+                sed -i -E "s|^(\s*my_ip\s*=\s*)\".*\"|\1\"${CIDR}\"|" terraform.tfvars
+            else
+                cp terraform.tfvars.example terraform.tfvars
+                sed -i -E "s|^(\s*my_ip\s*=\s*)\".*\"|\1\"${CIDR}\"|" terraform.tfvars
         else
             echo "No terraform.tfvars.example found; please create terraform.tfvars manually."
         fi
@@ -88,7 +90,7 @@ if [ -f terraform.tfvars ]; then
 else
     if [ -f terraform.tfvars.example ]; then
         cp terraform.tfvars.example terraform.tfvars
-        sed -i "s|YOUR_IP_ADDRESS\(/32\)\?|${CIDR}|g" terraform.tfvars
+        sed -i -E "s|^(\s*my_ip\s*=\s*)\".*\"|\1\"${CIDR}\"|" terraform.tfvars
         chmod 600 terraform.tfvars || true
         echo "terraform.tfvars created with IP: ${CIDR}"
     else
