@@ -83,6 +83,7 @@ if [ -f terraform.tfvars ]; then
             else
                 cp terraform.tfvars.example terraform.tfvars
                 sed -i -E "s|^(\s*my_ip\s*=\s*)\".*\"|\1\"${CIDR}\"|" terraform.tfvars
+            fi
         else
             echo "No terraform.tfvars.example found; please create terraform.tfvars manually."
         fi
