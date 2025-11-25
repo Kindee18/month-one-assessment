@@ -3,6 +3,7 @@ terraform.tfstate
 terraform.tfstate.backup
 *.tfvars
 *.tfvars.json
+terraform.tfvars.bak
 # Local override files
 override.tf
 override.tf.json

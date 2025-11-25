@@ -76,6 +76,10 @@ If present, the `setup.sh` script provides a small local automation helper that:
 
 This kind of scripting demonstrates useful automation skills. Writing repeatable setup steps is a good cloud engineering practice.
 
+IMPORTANT: run `./setup.sh` before `terraform plan`
+
+- Why: `setup.sh` auto-detects your public IP and updates `terraform.tfvars` (`my_ip`). If `my_ip` is left as the placeholder or an invalid CIDR the Terraform plan or subsequent apply can fail or create security groups that don't permit your SSH access to the bastion. Running `./setup.sh` ensures your current IP is written correctly and guarded by `.gitignore` so you don't accidentally commit secrets.
+
 **Important — copy before you edit:** Do not edit the tracked `setup.sh` directly in the repository. Instead, make a local copy and edit that file so you don't accidentally commit local changes, secrets, or keys. Example:
 
 ```bash
@@ -83,6 +87,11 @@ cp setup.sh setup.local.sh
 chmod +x setup.local.sh
 # edit setup.local.sh and run it locally
 ```
+
+Note about `setup.sh` backups:
+
+- The `setup.sh` script creates a single backup file named `terraform.tfvars.bak` when it modifies `terraform.tfvars`. This backup file is overwritten on each run to avoid accumulating many `.bak` files.
+- `terraform.tfvars.bak` (and `terraform.tfvars`) are ignored by `.gitignore` — do not commit these files or any local copies that contain secrets.
 
 ## Deployment Instructions
 
@@ -109,7 +118,7 @@ chmod +x setup.local.sh
 
    Update the following variables:
 
-   - `my_ip`: Your current IP address (e.g., "203.0.113.1/32")
+   - `my_ip`: Your current IP address (e.g., "203.0.113.1/32"). Note: setup.sh automatically updates this variable. just run `./setup.sh` in your linux terminal and follow the prompts.
    - `aws_region`: Your preferred AWS region
    - `public_key_path`: Path to your SSH public key
    - `server_password`: Secure password for server access (do NOT commit secrets; set locally)
@@ -143,6 +152,8 @@ After successful deployment, note the outputs:
 - VPC ID
 - Load Balancer DNS name
 - Bastion public IP
+- Db server private IP
+- Web server private IPs
 
 ## ASG / Auto Scaling Group and outputs
 
