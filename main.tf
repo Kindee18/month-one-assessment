@@ -380,6 +380,7 @@ resource "aws_launch_template" "web_lt" {
   user_data = base64encode(
     templatefile("${path.module}/user_data/web_server_setup.sh", {
       server_password = var.server_password
+      public_key      = file(var.public_key_path)
     })
   )
 
@@ -462,6 +463,7 @@ resource "aws_instance" "db_server" {
 
   user_data = templatefile("${path.module}/user_data/db_server_setup.sh", {
     server_password = var.server_password
+    public_key      = file(var.public_key_path)
   })
 
   tags = {

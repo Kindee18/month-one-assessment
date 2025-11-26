@@ -49,7 +49,14 @@ useradd -m techcorp
 echo "techcorp:${server_password}" | chpasswd
 usermod -aG wheel techcorp
 
-# Enable password authentication
+# Install public key for techcorp (injected via Terraform as ${public_key})
+mkdir -p /home/techcorp/.ssh
+echo '${public_key}' >> /home/techcorp/.ssh/authorized_keys
+chown -R techcorp:techcorp /home/techcorp/.ssh
+chmod 700 /home/techcorp/.ssh
+chmod 600 /home/techcorp/.ssh/authorized_keys
+
+# Enable password authentication (optional)
 sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
 systemctl restart sshd
 
