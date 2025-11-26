@@ -275,6 +275,48 @@ aws elbv2 describe-target-health --target-group-arn $(terraform output -raw web_
    ssh techcorp@<db-server-private-ip>
    ```
 
+### Agent forwarding (recommended)
+
+When connecting to private instances via the bastion, forward your local SSH agent so you do not need to copy private keys to the bastion. This is the recommended, secure workflow:
+
+1. On your laptop (ensure your private key is loaded into the agent):
+
+```bash
+eval "$(ssh-agent -s)"        # start an agent if not already running
+ssh-add ~/.ssh/id_rsa          # add your key to the agent (run once)
+```
+
+2. Connect to the bastion with agent forwarding:
+
+```bash
+ssh -A -i ~/.ssh/id_rsa ec2-user@<bastion-public-ip>
+```
+
+3. From the bastion, connect to private instances using the `techcorp` user (do not use `-i` here):
+
+```bash
+ssh techcorp@<db-server-private-ip>
+ssh techcorp@<web-server-private-ip>
+```
+
+4. Verify the agent was forwarded (on the bastion):
+
+```bash
+ssh-add -l   # should list your key fingerprint; an empty list means the agent wasn't forwarded
+```
+
+One-time alternative (if you cannot use agent forwarding): copy your public key from the bastion into the target instance's `authorized_keys` (this will prompt for the `techcorp` password once):
+
+```bash
+# run on bastion; will prompt once for the techcorp password
+ssh techcorp@<private-ip> 'mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys' < ~/.ssh/id_rsa.pub
+ssh techcorp@<private-ip> 'chown -R techcorp:techcorp ~/.ssh && chmod 600 ~/.ssh/authorized_keys'
+```
+
+Notes:
+- Do not copy private keys to the bastion for routine use. Agent forwarding protects your private key while allowing the bastion to authenticate on your behalf.
+- After confirming key-based logins work, consider disabling password authentication in the user-data scripts for stronger security.
+
 ### Accessing PostgreSQL Database
 
 1. **Connect to Database Server** (via bastion):
