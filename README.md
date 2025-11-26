@@ -252,12 +252,12 @@ aws elbv2 describe-target-health --target-group-arn $(terraform output -raw web_
 2. **From Bastion to Web Servers**:
 
    ```bash
-   # Using SSH key (recommended)
+   # Using SSH key (recommended via agent-forwarding)
    # Preferred: connect as the `techcorp` user (public key installed by provisioning)
-   ssh -i ~/.ssh/id_rsa techcorp@<web-server-private-ip>
+   ssh techcorp@<web-server-private-ip>
 
    # Using username/password (for demonstration only)
-   # The `techcorp` user password is set from the `server_password` variable.
+   # The `techcorp` user password is set from the `server_password` variable (if public is not installed)
    # Do not store plaintext passwords in version control; set `server_password`
    # in your local `terraform.tfvars` or via environment variables.
    ssh techcorp@<web-server-private-ip>
@@ -266,12 +266,12 @@ aws elbv2 describe-target-health --target-group-arn $(terraform output -raw web_
 3. **From Bastion to Database Server**:
 
    ```bash
-   # Using SSH key (recommended)
+   # Using SSH key (recommended via agent-forwarding)
    # Preferred: connect as the `techcorp` user (public key installed by provisioning)
-   ssh -i ~/.ssh/id_rsa techcorp@<db-server-private-ip>
+   ssh techcorp@<db-server-private-ip>
 
    # Using username/password (for demonstration only)
-   # The `techcorp` user password is set from the `server_password` variable.
+   # The `techcorp` user password is set from the `server_password` variable (if public is not installed).
    ssh techcorp@<db-server-private-ip>
    ```
 
@@ -314,6 +314,7 @@ ssh techcorp@<private-ip> 'chown -R techcorp:techcorp ~/.ssh && chmod 600 ~/.ssh
 ```
 
 Notes:
+
 - Do not copy private keys to the bastion for routine use. Agent forwarding protects your private key while allowing the bastion to authenticate on your behalf.
 - After confirming key-based logins work, consider disabling password authentication in the user-data scripts for stronger security.
 
