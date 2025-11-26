@@ -253,7 +253,8 @@ aws elbv2 describe-target-health --target-group-arn $(terraform output -raw web_
 
    ```bash
    # Using SSH key (recommended)
-   ssh -i ~/.ssh/id_rsa ec2-user@<web-server-private-ip>
+   # Preferred: connect as the `techcorp` user (public key installed by provisioning)
+   ssh -i ~/.ssh/id_rsa techcorp@<web-server-private-ip>
 
    # Using username/password (for demonstration only)
    # The `techcorp` user password is set from the `server_password` variable.
@@ -266,7 +267,8 @@ aws elbv2 describe-target-health --target-group-arn $(terraform output -raw web_
 
    ```bash
    # Using SSH key (recommended)
-   ssh -i ~/.ssh/id_rsa ec2-user@<db-server-private-ip>
+   # Preferred: connect as the `techcorp` user (public key installed by provisioning)
+   ssh -i ~/.ssh/id_rsa techcorp@<db-server-private-ip>
 
    # Using username/password (for demonstration only)
    # The `techcorp` user password is set from the `server_password` variable.
